@@ -1,0 +1,20 @@
+
+
+exit
+\exit
+cd -
+cd -
+cd 2023201009_A0
+ls -l
+cd Assignments
+ls -l
+cd DSAP
+cd ../
+cd AOS
+cd DSSAP
+ls -al
+cd ../
+ls -l
+ls
+cd ../
+cd -

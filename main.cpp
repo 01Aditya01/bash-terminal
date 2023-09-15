@@ -7,6 +7,21 @@ void detectCommand(vector<string>&);
     string home_directory_path;
     int home_path_len;
     string prev_dir;
+    string history_path;
+    int fg_pid=-1;
+
+void c_signalHandler(int signal){
+    cout<<endl;
+    if(fg_pid==-1){
+        return;
+    }
+    if(fg_pid > 0){
+        if(kill(fg_pid, SIGINT) == -1){
+            perror("Error killing process");
+        }
+        fg_pid = -1;
+    }
+}
 
 int main(int argc, char* argv[]){
 
@@ -19,6 +34,10 @@ int main(int argc, char* argv[]){
     home_directory_path=executableDirectory.string();
     home_path_len=home_directory_path.length()-2;
     home_directory_path=home_directory_path.substr(0,home_path_len);
+    history_path = home_directory_path + "/" + ".history.txt";
+
+    signal(SIGINT, c_signalHandler);
+
     while(true){
         // cout<<"argv[0]: "<<argv[0]<<endl;
         char *username = getlogin();
@@ -29,7 +48,7 @@ int main(int argc, char* argv[]){
         }
         char hostname[256];
         if (gethostname(hostname, sizeof(hostname)) == 0) {
-            cout <<hostname<<":";
+            cout <<hostname<<":";   
         } else {
             cerr << "Error getting hostname.";
         }
@@ -37,20 +56,28 @@ int main(int argc, char* argv[]){
 
         printCurrentDir(argv);
 
-
         char input[128];
-        cin.getline(input,128);
+        if(!cin.getline(input,128)){
+            exit(1);
+        }
+
+        writeHistory(input);
 
         char* token;
         vector<string> arg;
-        token=strtok(input," ");
+        token=strtok(input,";");
         while(token!=NULL){
             // string s=token;
             arg.push_back(token);
-            token=strtok(NULL," ");
+            token=strtok(NULL,";");
         }
-        if(!redirection(arg))
-        detectCommand(arg);
+
+        int n= arg.size();
+        for(int i=0;i<n;i++){
+            pipeline(const_cast<char*>(arg[i].c_str()));
+            
+            // detectCommand(arg[i]);
+        }
 
         
     }

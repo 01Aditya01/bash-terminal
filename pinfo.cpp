@@ -28,13 +28,13 @@ void pinfo(vector<string> &arg){
     while (getline(file, line)) {
         // cout << line << endl; // Print each line from the file
         if(line.compare(0,6,"State:")==0){
-            cout<<"fg_pgid="<<fg_pgid<<endl;
-            cout<<"my_pgid="<<my_pgid<<endl;
+            // cout<<"fg_pgid="<<fg_pgid<<endl;
+            // cout<<"my_pgid="<<my_pgid<<endl;
             cout<<"Process Status: "<<line.substr(7,1);
             if(fg_pgid==my_pgid) cout<<"+";
             cout<<endl;
         }
-        else if(line.compare(0,6,"VmSize:")==0){
+        else if(line.compare(0,7,"VmSize:")==0){
             cout<<"memory: "<<line.substr(7)<<endl;
         }
     }

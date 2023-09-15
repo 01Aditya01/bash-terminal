@@ -2,7 +2,7 @@
 
 int rest(vector<string> &arg){
     pid_t pid= fork();
-
+    fg_pid=pid;
     if (pid < 0) {
         cerr << "Fork failed." << endl;
         return 1;
@@ -17,11 +17,13 @@ int rest(vector<string> &arg){
         }
         c_arg[n]=NULL;
         if(execvp(c_arg[0], c_arg)==-1){
-            cerr<<"Execution failed"<<endl;
-            return 1;
+
+            cerr<<"Execution failed "<<c_arg[0]<<endl;
+            exit(1);
         }
     }
     else{
+
         int status;
         // cout<<"child pid: "<<pid<<endl;
         wait(&status);

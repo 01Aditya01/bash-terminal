@@ -1,6 +1,16 @@
 #include "header.h"
 
-bool redirection(vector<string> &arg){
+bool redirection(char* input){
+
+    vector<string> arg;
+    char* token;
+    token=strtok(input," ");
+    
+    while(token!=NULL){
+        // string s=token;
+        arg.push_back(token);
+        token=strtok(NULL," ");
+    }
 
     int n=arg.size();
     bool flag=false;
@@ -57,6 +67,10 @@ bool redirection(vector<string> &arg){
         detectCommand(temp);
         dup2(stdin_fd, STDIN_FILENO);
         dup2(stdout_fd, STDOUT_FILENO);
+        return true;
+    }
+    else{
+        detectCommand(arg);
         return true;
     }
     return false;

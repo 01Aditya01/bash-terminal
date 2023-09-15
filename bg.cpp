@@ -16,6 +16,11 @@ int bg(vector<string> &arg){
             cout<<c_arg[i]<<" ";
         }
         c_arg[n-1]=NULL;
+
+        if (setsid() < 0) {
+            perror("error setting process to background");
+            exit(1);
+        }
         if(execvp(c_arg[0], c_arg)==-1){
             cerr<<"Execution failed"<<endl;
             return 1;

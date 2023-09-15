@@ -40,6 +40,13 @@ void detectCommand(vector<string> &arg){
     else if(arg[0]=="search"){
         cout<<boolalpha<<search(".",arg[1])<<endl;
     }
+    else if(arg[0]=="exit"){
+        exit(1);
+    }
+    else if(arg[0]=="history"){
+        if(arg.size() == 1) history(10);
+        else history(stoi(arg[1]));
+    }
 
     else{
         rest(arg);

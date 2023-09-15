@@ -21,12 +21,15 @@
 #include <sstream>
 #include <sys/wait.h>
 #include <fcntl.h>
+#include <csignal>
 
 using namespace std;
 
 extern string home_directory_path;
 extern int home_path_len;
 extern string prev_dir;
+extern string history_path;
+extern int fg_pid;
 
 void printCurrentDir(char *[]);
 void detectCommand(vector<string> &);
@@ -40,7 +43,10 @@ int bg(vector<string> &);
 void pinfo(vector<string> &);
 bool search(string , string);
 int rest(vector<string> &);
-bool redirection(vector<string> &);
-
+bool redirection(char*);
+void pipeline(char* );
+bool tokenize(char* , vector<string> &);
+void writeHistory(char*);
+void history(int);
 
 #endif

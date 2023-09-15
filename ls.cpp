@@ -1,5 +1,18 @@
 #include "header.h"
 
+void getTotal(string file_name, string dir_path, long long &total){
+    string file_path=dir_path+"/"+file_name;
+    // cout<<file_path<<endl;
+    struct stat fileStat;
+    if(stat(file_path.c_str(), &fileStat)==-1){
+        perror("error getting file info");
+        return;
+    }
+    if (S_ISREG(fileStat.st_mode)) {
+        total += fileStat.st_blocks/2; // Add the file size to the total
+    }
+}
+
 void getPermission(string file_name, string dir_path){
     
     string file_path=dir_path+"/"+file_name;
@@ -62,6 +75,13 @@ int listFile(const char* dir_path, string all_flags, bool flag){
     sort(file_name.begin(), file_name.end());
     int n=file_name.size();
     if(all_flags=="l"){
+        long long total=0;
+        for(int i=0;i<n;i++){
+            if(file_name[i][0]!='.'){
+                getTotal(file_name[i], dir_path, total);
+            }
+        }
+        cout<<"total "<<total<<endl;
         for(int i=0;i<n;i++){
             if(file_name[i][0]!='.')
                 getPermission(file_name[i], dir_path);
@@ -75,6 +95,12 @@ int listFile(const char* dir_path, string all_flags, bool flag){
     }
 
     else if(all_flags=="la" || all_flags=="al"){
+        long long total=0;
+        for(int i=0;i<n;i++){
+            getTotal(file_name[i], dir_path, total);
+            
+        }
+        cout<<"total "<<total<<endl;
         for(int i=0;i<n;i++){
             getPermission(file_name[i], dir_path);
         }
@@ -112,6 +138,7 @@ void ls(vector<string>& arg){
     if(n-1-flag_count>=2) multiple_dir=true;
 
     for(int i=1;i<n;i++){
+        // if arg[i] is not flag, i.e. it is a directory so send it to list files function
         if(flag.find(arg[i])==flag.end()) listFile(arg[i].c_str(),all_flags,multiple_dir);
     }
 
